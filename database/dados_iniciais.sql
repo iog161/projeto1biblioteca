@@ -1,17 +1,6 @@
 CREATE DATABASE biblioteca_1ano;
 USE biblioteca_1ano;
 
-DELETE FROM emprestimo;
-DELETE FROM aluno;
-DELETE FROM livro;
-DELETE FROM bibliotecario;
-
-
-ALTER TABLE emprestimo AUTO_INCREMENT = 1;
-ALTER TABLE aluno AUTO_INCREMENT = 1;
-ALTER TABLE livro AUTO_INCREMENT = 1;
-ALTER TABLE bibliotecario AUTO_INCREMENT = 1;
- 
 #Criando usuário
 CREATE USER 'biblioteca_user1'@'localhost' IDENTIFIED BY 'projeto1';
 

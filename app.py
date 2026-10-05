@@ -641,6 +641,9 @@ def excluir_bibliotecario(id_bibliotecario):
 @app.route("/emprestimos")
 def listar_emprestimos():
     try:
+        status = request.args.get("status", "")
+
+
         conexao = conectar()
         cursor = conexao.cursor(dictionary=True)
 
@@ -659,11 +662,17 @@ def listar_emprestimos():
             INNER JOIN aluno a ON e.id_aluno = a.id_aluno
             INNER JOIN livro l ON e.id_livro = l.id_livro
             INNER JOIN bibliotecario b ON e.id_bibliotecario = b.id_bibliotecario
-            ORDER BY e.id_emprestimo DESC
         """
 
 
-        cursor.execute(sql)
+        if status:
+            sql += " WHERE e.status = %s ORDER BY e.id_emprestimo DESC"
+            cursor.execute(sql, (status,))
+        else:
+            sql += " ORDER BY e.id_emprestimo DESC"
+            cursor.execute(sql)
+
+
         emprestimos = cursor.fetchall()
 
 
@@ -671,11 +680,16 @@ def listar_emprestimos():
         conexao.close()
 
 
-        return render_template("emprestimos.html", emprestimos=emprestimos)
+        return render_template(
+            "emprestimos.html",
+            emprestimos=emprestimos,
+            status=status
+        )
 
 
     except Exception as erro:
-        return f"Erro ao listar empréstimos: {erro}"
+        flash(f"Erro ao listar empréstimos: {erro}", "erro")
+        return redirect("/")
 
 
 
